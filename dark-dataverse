@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es" data-view="all">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infografía | dARK en Dataverse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .gradient-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%); }
+
+    /* Idioma */
+    html[data-lang="es"] [data-l="pt"],
+    html[data-lang="pt"] [data-l="es"] { display: none !important; }
+
+    /* Vista */
+    html[data-view="importer"] .only-integration { display: none !important; }
+
+    /* Íconos de línea */
+    .ico { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Rombo de decisión */
+    .diamond { width: 46px; height: 46px; transform: rotate(45deg); border-radius: 10px; flex-shrink: 0;
+               display: flex; align-items: center; justify-content: center; }
+    .diamond > span { transform: rotate(-45deg); }
+
+    .inline-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+                   font-size: .78em; background: #f1f5f9; color: #334155; padding: .1em .4em;
+                   border-radius: .35em; border: 1px solid #e2e8f0; white-space: nowrap; }
+    .dark-code { background: rgba(255,255,255,.08); color: #bae6fd; border-color: rgba(255,255,255,.15); }
+
+    @media print {
+      header .no-print { display: none !important; }
+      header { position: static !important; }
+      .shadow-sm, .shadow-xl, .shadow-lg { box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen">
+
+  <!-- Sprite de íconos -->
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l5 5v11a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/></symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1011.4 0"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 011-1h8l9 9-9 9-9-9z"/><path d="M7.5 7.5h.01"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4 18-7z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></symbol>
+    <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  </svg>
+
+  <!-- Encabezado -->
+  <header class="gradient-header text-white sticky top-0 z-50 shadow-lg border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="p-2.5 bg-blue-500/20 rounded-xl border border-blue-400/30 text-blue-300">
+          <svg class="w-7 h-7 ico"><use href="#i-tag"/></svg>
+        </div>
+        <div>
+          <span class="text-xs font-semibold tracking-wider uppercase text-sky-400 block">
+            <span data-l="es">Identificadores persistentes</span><span data-l="pt">Identificadores persistentes</span>
+          </span>
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight">
+            <span data-l="es">dARK en Dataverse</span><span data-l="pt">dARK no Dataverse</span>
+          </h1>
+        </div>
+      </div>
+
+      <div class="no-print flex flex-wrap items-center gap-3">
+        <!-- Selector de vista -->
+        <div class="inline-flex bg-slate-800/80 p-1.5 rounded-xl border border-slate-700 shadow-inner">
+          <button id="btn-all" onclick="setView('all')" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200">
+            <span data-l="es">Integración dARK dateverse</span><span data-l="pt">Integração com dARK dateverse</span>
+          </button>
+          <button id="btn-importer" onclick="setView('importer')" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200">
+            <span data-l="es">Dark importer</span><span data-l="pt">Dark importer</span>
+          </button>
+        </div>
+        <!-- Selector de idioma -->
+        <div class="inline-flex bg-slate-800/80 p-1.5 rounded-xl border border-slate-700 shadow-inner">
+          <button id="btn-es" onclick="setLanguage('es')" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200">🇪🇸 Español</button>
+          <button id="btn-pt" onclick="setLanguage('pt')" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200">🇧🇷 Português</button>
+        </div>
+        
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- ===================================================== -->
+    <!-- PARTE 1 · dARK-dataverse-integration                   -->
+    <!-- ===================================================== -->
+    <section class="only-integration space-y-8">
+
+      <!-- Banner -->
+      <div class="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-4xl space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/20 border border-sky-400/30 rounded-full text-xs font-semibold text-sky-300">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>dARK-dataverse-integration</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <span data-l="es">Integración de dARK (ARK descentralizados, Minter de LA Referencia) en Dataverse 6.12.1.</span>
+            <span data-l="pt">Integração do dARK (ARKs descentralizados, Minter da LA Referencia) no Dataverse 6.12.1.</span>
+          </h2>
+        </div>
+      </div>
+
+      <!-- Bloque 1 ¿Qué es? -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">01</span>
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">¿Qué es?</span><span data-l="pt">O que é?</span></h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span class="inline-flex p-2 bg-blue-50 text-blue-600 rounded-xl mb-3"><svg class="w-5 h-5 ico"><use href="#i-tag"/></svg></span>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              <span data-l="es">Identificadores ARK descentralizados, emitidos por el <strong>Minter dARK</strong>.</span>
+              <span data-l="pt">Identificadores ARK descentralizados, emitidos pelo <strong>Minter dARK</strong>.</span>
+            </p>
+          </div>
+          <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span class="inline-flex p-2 bg-indigo-50 text-indigo-600 rounded-xl mb-3"><svg class="w-5 h-5 ico"><use href="#i-doc"/></svg></span>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              <span data-l="es">La integración asigna un ARK <strong class="text-slate-900">a cada dataset local</strong> de Dataverse, de forma automática.</span>
+              <span data-l="pt">A integração atribui um ARK <strong class="text-slate-900">a cada dataset local</strong> do Dataverse, de forma automática.</span>
+            </p>
+          </div>
+          <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span class="inline-flex p-2 bg-emerald-50 text-emerald-600 rounded-xl mb-3"><svg class="w-5 h-5 ico"><use href="#i-check"/></svg></span>
+            <p class="text-sm text-slate-700 leading-relaxed">
+              <span data-l="es">El ARK queda visible en los metadatos del dataset, en el campo <strong class="text-slate-900">Other ID</strong> (agencia <span class="inline-code">dARK</span>, valor <span class="inline-code">ark:&lt;NAAN&gt;/&lt;id&gt;</span>).</span>
+              <span data-l="pt">O ARK fica visível nos metadados do dataset, no campo <strong class="text-slate-900">Other ID</strong> (agência <span class="inline-code">dARK</span>, valor <span class="inline-code">ark:&lt;NAAN&gt;/&lt;id&gt;</span>).</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque 2 Principios -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">02</span>
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Principios de diseño</span><span data-l="pt">Princípios de design</span></h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="p-5 rounded-2xl border border-slate-200/80 hover:shadow-md transition">
+            <span class="inline-flex p-2.5 bg-blue-50 text-blue-600 rounded-xl"><svg class="w-6 h-6 ico"><use href="#i-layers"/></svg></span>
+            <h4 class="mt-4 font-bold text-slate-900 text-sm">
+              <span data-l="es">Todos los datasets locales, con cualquier PID</span><span data-l="pt">Todos os datasets locais, com qualquer PID</span>
+            </h4>
+            <p class="mt-2 text-xs text-slate-600 leading-relaxed">
+              <span data-l="es">DOI, Handle, PermaLink y PID de plugins. Los datasets <strong>cosechados</strong> quedan fuera.</span>
+              <span data-l="pt">DOI, Handle, PermaLink e PIDs de plugins. Os datasets <strong>coletados</strong> ficam de fora.</span>
+            </p>
+          </div>
+          <div class="p-5 rounded-2xl border border-slate-200/80 hover:shadow-md transition">
+            <span class="inline-flex p-2.5 bg-slate-100 text-slate-600 rounded-xl"><svg class="w-6 h-6 ico"><use href="#i-power"/></svg></span>
+            <h4 class="mt-4 font-bold text-slate-900 text-sm">
+              <span data-l="es">Activación configurable</span><span data-l="pt">Ativação configurável</span>
+            </h4>
+            <p class="mt-2 text-xs text-slate-600 leading-relaxed">
+              <span data-l="es">Sin activarlo (<span class="inline-code">dataverse.dark.enabled</span>), Dataverse funciona exactamente igual que el original.</span>
+              <span data-l="pt">Sem ativá-lo (<span class="inline-code">dataverse.dark.enabled</span>), o Dataverse funciona exatamente igual ao original.</span>
+            </p>
+          </div>
+          <div class="p-5 rounded-2xl border border-slate-200/80 hover:shadow-md transition">
+            <span class="inline-flex p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><svg class="w-6 h-6 ico"><use href="#i-shield-check"/></svg></span>
+            <h4 class="mt-4 font-bold text-slate-900 text-sm">
+              <span data-l="es">No bloquea el workflow de Dataverse</span><span data-l="pt">Não bloqueia o workflow do Dataverse</span>
+            </h4>
+            <p class="mt-2 text-xs text-slate-600 leading-relaxed">
+              <span data-l="es">Si hay algún error de comunicación con el Minter; crear, publicar, retirar o borrar un dataset funciona igual. El error queda registrado y se reintenta.</span>
+              <span data-l="pt">Se houver algum erro de comunicação com o Minter; criar, publicar, retirar ou excluir um dataset funciona igual. O erro fica registrado e é feita uma nova tentativa.</span>
+            </p>
+          </div>
+          <div class="p-5 rounded-2xl border border-slate-200/80 hover:shadow-md transition">
+            <span class="inline-flex p-2.5 bg-amber-50 text-amber-600 rounded-xl"><svg class="w-6 h-6 ico"><use href="#i-clock"/></svg></span>
+            <h4 class="mt-4 font-bold text-slate-900 text-sm">
+              <span data-l="es">Después de confirmar</span><span data-l="pt">Depois de confirmar</span>
+            </h4>
+            <p class="mt-2 text-xs text-slate-600 leading-relaxed">
+              <span data-l="es">Las llamadas al Minter se hacen en segundo plano.</span>
+              <span data-l="pt">As chamadas ao Minter são feitas em segundo plano.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque 3 ¿Qué pasa cuando publico? -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">03</span>
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">¿Qué pasa cuando publico?</span><span data-l="pt">O que acontece quando publico?</span></h3>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <ol class="lg:col-span-7 relative space-y-4">
+            <div class="absolute left-[19px] top-4 bottom-4 w-0.5 bg-slate-200" aria-hidden="true"></div>
+            <li class="relative flex gap-4 items-start">
+              <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-blue-600 text-white font-extrabold flex items-center justify-center shadow">1</span>
+              <div class="pt-2 text-sm text-slate-700"><span data-l="es">El depositante publica el dataset, <strong>sin cambios</strong>.</span><span data-l="pt">O depositante publica o dataset, <strong>sem alterações</strong>.</span></div>
+            </li>
+            <li class="relative flex gap-4 items-start">
+              <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-indigo-600 text-white font-extrabold flex items-center justify-center shadow ring-4 ring-indigo-100">2</span>
+              <div class="pt-2 text-sm text-slate-700"><span data-l="es">Dataverse escribe el dARK en el campo <strong>Other ID</strong> de la versión publicada.</span><span data-l="pt">O Dataverse grava o dARK no campo <strong>Other ID</strong> da versão publicada.</span>
+                <span class="ml-1 text-[11px] font-semibold text-indigo-600"><span data-l="es">→ ver detalle</span><span data-l="pt">→ ver detalhe</span></span>
+              </div>
+            </li>
+            <li class="relative flex gap-4 items-start">
+              <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-violet-600 text-white font-extrabold flex items-center justify-center shadow">3</span>
+              <div class="pt-2 text-sm text-slate-700"><span data-l="es">Dataverse confirma la publicación; <strong>el usuario no espera al Minter</strong>.</span><span data-l="pt">O Dataverse confirma a publicação; <strong>o usuário não espera pelo Minter</strong>.</span></div>
+            </li>
+            <li class="relative flex gap-4 items-start">
+              <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center shadow">4</span>
+              <div class="pt-2 text-sm text-slate-700"><span data-l="es">En segundo plano, se envían los metadatos al Minter.</span><span data-l="pt">Em segundo plano, os metadados são enviados ao Minter.</span></div>
+            </li>
+            <li class="relative flex gap-4 items-start">
+              <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-emerald-500 text-white font-extrabold flex items-center justify-center shadow">5</span>
+              <div class="pt-2 text-sm text-slate-700"><span data-l="es">Un proceso periódico (<strong>refresh</strong>) confirma el estado y deja el ARK resolviendo.</span><span data-l="pt">Um processo periódico (<strong>refresh</strong>) confirma o status e deixa o ARK resolvendo.</span></div>
+            </li>
+          </ol>
+
+          <!-- Recuadro otherId -->
+          <div class="lg:col-span-5">
+            <div class="h-full bg-gradient-to-br from-blue-900 to-indigo-900 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+              <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300"><span data-l="es">Paso 2 · detalle</span><span data-l="pt">Etapa 2 · detalhe</span></span>
+              <h4 class="mt-1 text-lg font-extrabold">¿otherId?<span data-l="pt" class="sr-only"></span></h4>
+              <p class="mt-2 text-sm text-slate-200 leading-relaxed">
+                <span data-l="es">Es un <strong class="text-white">metadato compuesto</strong> (con subcampos), usado para registrar <strong class="text-white">identificadores externos</strong>.</span>
+                <span data-l="pt">É um <strong class="text-white">metadado composto</strong> (com subcampos), usado para registrar <strong class="text-white">identificadores externos</strong>.</span>
+              </p>
+              <div class="mt-4 space-y-3">
+                <div class="p-3 rounded-xl bg-white/10 border border-white/10">
+                  <span class="inline-code dark-code">otherIdAgency</span> = <strong>"dARK"</strong>
+                  <p class="mt-1 text-xs text-slate-300"><span data-l="es">Fijo.</span><span data-l="pt">Fixo.</span></p>
+                </div>
+                <div class="p-3 rounded-xl bg-white/10 border border-white/10">
+                  <span class="inline-code dark-code">otherIdValue</span> = <strong><span data-l="es">el valor del dARK</span><span data-l="pt">o valor do dARK</span></strong>
+                  <p class="mt-1 text-xs text-slate-300"><span data-l="es">Ej.</span><span data-l="pt">Ex.</span> <span class="inline-code dark-code">ark:abcd123</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque 4 Arquitectura -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">04</span>
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Arquitectura</span><span data-l="pt">Arquitetura</span></h3>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-stretch gap-4">
+          <!-- Contenedor Dataverse -->
+          <div class="flex-1 rounded-2xl border-2 border-dashed border-sky-300 bg-sky-50/40 p-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="w-5 h-5 ico text-sky-700"><use href="#i-server"/></svg>
+              <span class="font-extrabold text-sky-800">Dataverse</span>
+            </div>
+            <div class="flex flex-col md:flex-row items-stretch gap-3">
+              <div class="flex-1 bg-white rounded-xl border border-slate-200 p-4">
+                <span class="text-[11px] font-bold uppercase text-slate-400"><span data-l="es">Comandos de Dataverse</span><span data-l="pt">Comandos do Dataverse</span></span>
+                <p class="mt-1 text-xs text-slate-600"><span data-l="es">crear, publicar, actualizar, retirar, destruir</span><span data-l="pt">criar, publicar, atualizar, retirar, destruir</span></p>
+              </div>
+              <div class="flex items-center justify-center text-slate-400 font-bold text-xl"><span class="rotate-90 md:rotate-0">→</span></div>
+              <div class="flex-1 bg-white rounded-xl border border-slate-200 p-4">
+                <span class="text-[11px] font-bold uppercase text-slate-400"><span data-l="es">implementación de dARK</span><span data-l="pt">implementação do dARK</span></span>
+                <p class="mt-1 text-xs text-slate-600"><span data-l="es">comandos</span><span data-l="pt">comandos</span></p>
+              </div>
+              <div class="flex items-center justify-center text-slate-400 font-bold text-xl"><span class="rotate-90 md:rotate-0">→</span></div>
+              <div class="flex-1 bg-indigo-600 text-white rounded-xl p-4 shadow">
+                <span class="text-[11px] font-bold uppercase text-indigo-200"><span data-l="es">Servicio</span><span data-l="pt">Serviço</span></span>
+                <p class="mt-1 text-sm font-bold"><span data-l="es">servicio dARK</span><span data-l="pt">serviço dARK</span></p>
+              </div>
+            </div>
+            <div class="mt-4 flex items-start gap-3 bg-white rounded-xl border border-slate-200 p-4">
+              <span class="p-2 bg-blue-50 text-blue-600 rounded-xl shrink-0"><svg class="w-5 h-5 ico"><use href="#i-db"/></svg></span>
+              <div>
+                <p class="text-sm font-bold text-slate-900"><span data-l="es">Tabla</span><span data-l="pt">Tabela</span> <span class="inline-code">dark</span> <span data-l="es">en PostgreSQL</span><span data-l="pt">no PostgreSQL</span></p>
+                <p class="text-xs text-slate-600 mt-0.5"><span data-l="es">Un registro por dataset con su ARK, estado y último error.</span><span data-l="pt">Um registro por dataset com seu ARK, status e último erro.</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flecha a Minter -->
+          <div class="flex lg:flex-col items-center justify-center gap-1 text-slate-400">
+            <span class="font-bold text-xl rotate-90 lg:rotate-0">→</span>
+            <span class="text-[10px] font-semibold uppercase tracking-wider text-amber-600"><span data-l="es">en segundo plano</span><span data-l="pt">em segundo plano</span></span>
+          </div>
+
+          <!-- Minter -->
+          <div class="lg:w-56 rounded-2xl bg-slate-900 text-white p-5 flex flex-col items-center justify-center text-center">
+            <span class="p-3 bg-white/10 rounded-xl text-sky-300"><svg class="w-7 h-7 ico"><use href="#i-server"/></svg></span>
+            <span class="mt-3 font-extrabold">Minter dARK</span>
+          </div>
+        </div>
+
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-[1fr_auto_2fr] items-stretch gap-4">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+            <span class="p-2 bg-white text-amber-600 rounded-xl shrink-0"><svg class="w-5 h-5 ico"><use href="#i-clock"/></svg></span>
+            <div>
+              <p class="text-sm font-bold text-slate-900">cron</p>
+              <p class="text-xs text-slate-600 mt-0.5"><span data-l="es">Llama al refresh periódicamente.</span><span data-l="pt">Chama o refresh periodicamente.</span></p>
+            </div>
+          </div>
+          <div class="flex items-center justify-center text-slate-400 font-bold text-xl"><span class="rotate-90 md:rotate-0">→</span></div>
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+            <span class="p-2 bg-white text-emerald-600 rounded-xl shrink-0"><svg class="w-5 h-5 ico"><use href="#i-shield"/></svg></span>
+            <div>
+              <p class="text-sm font-bold text-slate-900"><span data-l="es">API de administración</span><span data-l="pt">API de administração</span> <span class="inline-code">/api/admin/dark</span></p>
+              <p class="text-xs text-slate-600 mt-0.5"><span data-l="es">y panel web para superusuarios.</span><span data-l="pt">e painel web para superusuários.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque 5 y 6 -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Bloque 5 Metadatos -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">05</span>
+            <h3 class="text-lg font-bold text-slate-900"><span data-l="es">Metadatos enviados</span><span data-l="pt">Metadados enviados</span></h3>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-100">
+              <span class="block text-blue-600 font-bold text-xs"><span data-l="es">Nivel 1</span><span data-l="pt">Nível 1</span></span>
+              <span class="block text-base font-extrabold text-blue-900"><span data-l="es">Mínimo</span><span data-l="pt">Mínimo</span></span>
+              <p class="mt-2 text-xs text-slate-600"><span data-l="es">título, autores, fecha, …</span><span data-l="pt">título, autores, data, …</span></p>
+            </div>
+            <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-100">
+              <span class="block text-indigo-600 font-bold text-xs"><span data-l="es">Nivel 2</span><span data-l="pt">Nível 2</span></span>
+              <span class="block text-base font-extrabold text-indigo-900">XML</span>
+            </div>
+          </div>
+          <div class="mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-700 flex items-center gap-2">
+            <svg class="w-4 h-4 ico text-emerald-600 shrink-0"><use href="#i-check"/></svg>
+            <span data-l="es">Siempre se envía la <strong>última versión publicada</strong>.</span><span data-l="pt">Sempre é enviada a <strong>última versão publicada</strong>.</span>
+          </div>
+        </div>
+
+        <!-- Bloque 6 Herramientas -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <div class="flex items-center gap-3 mb-5">
+            <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">06</span>
+            <h3 class="text-lg font-bold text-slate-900"><span data-l="es">Herramientas para administradores</span><span data-l="pt">Ferramentas para administradores</span></h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><svg class="w-5 h-5 ico"><use href="#i-shield"/></svg></span>
+                <span class="font-bold text-slate-900 text-sm"><span data-l="es">Panel web para superusuarios</span><span data-l="pt">Painel web para superusuários</span></span>
+              </div>
+              <ul class="space-y-1.5 text-xs text-slate-600">
+                <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es">Conteo por estado, con error y sin dARK</span><span data-l="pt">Contagem por status, com erro e sem dARK</span></li>
+                <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es">Filtros</span><span data-l="pt">Filtros</span></li>
+                <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es">Reintentar</span><span data-l="pt">Tentar novamente</span></li>
+                <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es">Asignar a todos</span><span data-l="pt">Atribuir a todos</span></li>
+                <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es">Exportar a CSV</span><span data-l="pt">Exportar para CSV</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><svg class="w-5 h-5 ico"><use href="#i-terminal"/></svg></span>
+                <span class="font-bold text-slate-900 text-sm">API</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Refrescar todo</span><span data-l="pt">Atualizar tudo</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Refrescar un dataset</span><span data-l="pt">Atualizar um dataset</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Asignar un dataset</span><span data-l="pt">Atribuir um dataset</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Asignar a todos</span><span data-l="pt">Atribuir a todos</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Dar de baja</span><span data-l="pt">Dar baixa</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Conteos</span><span data-l="pt">Contagens</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Estado del proceso</span><span data-l="pt">Status do processo</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Listado</span><span data-l="pt">Listagem</span></span>
+                <span class="px-2 py-1 rounded-lg text-[11px] font-semibold bg-indigo-50 text-indigo-800"><span data-l="es">Exportar a CSV</span><span data-l="pt">Exportar para CSV</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Separador -->
+      <div class="flex items-center gap-4 pt-4">
+        <div class="flex-1 h-px bg-slate-300"></div>
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500"><span data-l="es"> </span><span data-l="pt"> </span></span>
+        <div class="flex-1 h-px bg-slate-300"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- PARTE 2 · dARK-dataverse-importer                      -->
+    <!-- ===================================================== -->
+    <section class="space-y-8">
+
+      <!-- A. Encabezado -->
+      <div class="bg-gradient-to-r from-indigo-900 to-blue-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-4xl space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/20 border border-sky-400/30 rounded-full text-xs font-semibold text-sky-300">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>dARK-dataverse-importer</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Dataverse Dark Importer</h2>
+          <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+            <span data-l="es">Carga masiva de identificadores dARK en datasets de Dataverse a partir de un CSV.</span>
+            <span data-l="pt">Carga em massa de identificadores dARK em datasets do Dataverse a partir de um CSV.</span>
+          </p>
+          <p class="text-base sm:text-lg font-bold text-white border-l-4 border-sky-400 pl-3">
+            <span data-l="es">Asigna identificadores dARK a tus datasets de Dataverse de forma masiva, segura y sin duplicados.</span>
+            <span data-l="pt">Atribua identificadores dARK aos seus datasets do Dataverse de forma massiva, segura e sem duplicados.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- B. ¿Qué hace? + C. otherId -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+          <h3 class="text-xl font-bold text-slate-900 mb-5"><span data-l="es">¿Qué hace?</span><span data-l="pt">O que faz?</span></h3>
+          <div class="space-y-4">
+            <div class="flex gap-4 items-start">
+              <span class="p-2.5 bg-blue-50 text-blue-600 rounded-xl shrink-0"><svg class="w-6 h-6 ico"><use href="#i-table"/></svg></span>
+              <p class="text-sm text-slate-700 pt-1.5">
+                <span data-l="es"><strong class="text-slate-900">Lee un CSV</strong> con el identificador persistente (PID) de cada dataset y su dARK.</span>
+                <span data-l="pt"><strong class="text-slate-900">Lê um CSV</strong> com o identificador persistente (PID) de cada dataset e seu dARK.</span>
+              </p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl shrink-0"><svg class="w-6 h-6 ico"><use href="#i-plus"/></svg></span>
+              <p class="text-sm text-slate-700 pt-1.5">
+                <span data-l="es"><strong class="text-slate-900">Agrega el dARK</strong> al campo estándar <span class="inline-code">otherId</span> del bloque Citation de cada dataset.</span>
+                <span data-l="pt"><strong class="text-slate-900">Adiciona o dARK</strong> ao campo padrão <span class="inline-code">otherId</span> do bloco Citation de cada dataset.</span>
+              </p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl shrink-0"><svg class="w-6 h-6 ico"><use href="#i-upload"/></svg></span>
+              <p class="text-sm text-slate-700 pt-1.5">
+                <span data-l="es"><strong class="text-slate-900">Publica el cambio en la versión actual</strong> (<span class="inline-code">updatecurrent</span>), sin crear un nuevo número de versión.</span>
+                <span data-l="pt"><strong class="text-slate-900">Publica a alteração na versão atual</strong> (<span class="inline-code">updatecurrent</span>), sem criar um novo número de versão.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="h-full bg-gradient-to-br from-blue-900 to-indigo-900 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <h4 class="text-lg font-extrabold">¿otherId?</h4>
+            <p class="mt-2 text-sm text-slate-200 leading-relaxed">
+              <span data-l="es">Es un <strong class="text-white">metadato compuesto</strong> (con subcampos), usado para registrar <strong class="text-white">identificadores externos</strong>.</span>
+              <span data-l="pt">É um <strong class="text-white">metadado composto</strong> (com subcampos), usado para registrar <strong class="text-white">identificadores externos</strong>.</span>
+            </p>
+            <div class="mt-4 space-y-3">
+              <div class="p-3 rounded-xl bg-white/10 border border-white/10">
+                <span class="inline-code dark-code">otherIdAgency</span> = <strong>"dARK"</strong>
+                <p class="mt-1 text-xs text-slate-300"><span data-l="es">Fijo; se compara sin distinguir mayúsculas.</span><span data-l="pt">Fixo; comparado sem diferenciar maiúsculas e minúsculas.</span></p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/10 border border-white/10">
+                <span class="inline-code dark-code">otherIdValue</span> = <strong><span data-l="es">el valor del dARK</span><span data-l="pt">o valor do dARK</span></strong>
+                <p class="mt-1 text-xs text-slate-300"><span data-l="es">Ej.</span><span data-l="pt">Ex.</span> <span class="inline-code dark-code">ark:abcd123</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D. Requisitos + F. CSV -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <h3 class="text-lg font-bold text-slate-900 mb-4"><span data-l="es">Requisitos previos</span><span data-l="pt">Pré-requisitos</span></h3>
+          <ul class="space-y-3 text-sm text-slate-700">
+            <li class="flex gap-3"><span>✅</span><span><span data-l="es">URL del servidor Dataverse</span><span data-l="pt">URL do servidor Dataverse</span> <span class="block text-xs text-slate-500 mt-0.5"><span data-l="es">Ej.</span><span data-l="pt">Ex.</span> <span class="inline-code">https://demo.dataverse.org</span></span></span></li>
+            <li class="flex gap-3"><span>✅</span><span><strong class="text-slate-900"><span data-l="es">API Token de un superusuario</span><span data-l="pt">API Token de um superusuário</span></strong>
+              <span class="block text-xs text-slate-500 mt-0.5"><span data-l="es">Es obligatorio porque publicar con <span class="inline-code">updatecurrent</span> está restringido a superusuarios.</span><span data-l="pt">É obrigatório porque publicar com <span class="inline-code">updatecurrent</span> é restrito a superusuários.</span></span></span></li>
+            <li class="flex gap-3"><span>✅</span><span><span data-l="es">Archivo CSV con el formato correcto (ver <em>Formato del CSV</em>)</span><span data-l="pt">Arquivo CSV com o formato correto (ver <em>Formato do CSV</em>)</span></span></li>
+          </ul>
+          <div class="mt-4 p-3 bg-sky-50 rounded-xl border border-sky-100 text-xs text-sky-800 flex gap-2 items-start">
+            <svg class="w-4 h-4 ico shrink-0 mt-0.5"><use href="#i-info"/></svg>
+            <span data-l="es">Al pulsar "Continuar", la app verifica el token.</span><span data-l="pt">Ao clicar em "Continuar", o app verifica o token.</span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <h3 class="text-lg font-bold text-slate-900 mb-4"><span data-l="es">Formato del CSV</span><span data-l="pt">Formato do CSV</span></h3>
+          <pre class="bg-slate-900 text-slate-100 rounded-xl p-4 text-xs sm:text-sm overflow-x-auto leading-relaxed"><span class="text-sky-300">dataset_pid</span>,<span class="text-emerald-300">dark_id</span>
+doi:10.5072/FK2/ABCD12,ark:abcd123
+hdl:20.500.12345/EFGH34,ark:efgh456</pre>
+          <p class="mt-3 text-xs text-slate-600">
+            <span class="inline-code">dataset_pid</span>:
+            <span data-l="es">el Persistent ID tal como lo espera Dataverse. Se acepta cualquier esquema (<span class="inline-code">doi:</span>, <span class="inline-code">hdl:</span>, <span class="inline-code">perma:</span> u otros).</span>
+            <span data-l="pt">o Persistent ID tal como o Dataverse espera. Qualquer esquema é aceito (<span class="inline-code">doi:</span>, <span class="inline-code">hdl:</span>, <span class="inline-code">perma:</span> ou outros).</span>
+          </p>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-rose-50 border border-rose-200">
+              <span class="font-bold text-rose-800">❌ <span data-l="es">Error (bloquea)</span><span data-l="pt">Erro (bloqueia)</span></span>
+              <p class="mt-2 text-rose-900/80"><span data-l="es">Falta una columna obligatoria, hay un valor vacío o un <span class="inline-code">dataset_pid</span> duplicado.</span><span data-l="pt">Falta uma coluna obrigatória, há um valor vazio ou um <span class="inline-code">dataset_pid</span> duplicado.</span></p>
+            </div>
+            <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+              <span class="font-bold text-amber-800">⚠️ <span data-l="es">Advertencia (no bloquea)</span><span data-l="pt">Aviso (não bloqueia)</span></span>
+              <p class="mt-2 text-amber-900/80"><span data-l="es">Un <span class="inline-code">dark_id</span> repetido.</span><span data-l="pt">Um <span class="inline-code">dark_id</span> repetido.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- E. Flujo en 4 pasos -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <h3 class="text-xl font-bold text-slate-900 mb-6"><span data-l="es">Flujo en 4 pasos</span><span data-l="pt">Fluxo em 4 etapas</span></h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="relative p-5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-full bg-blue-600 text-white font-extrabold flex items-center justify-center">1</span>
+              <svg class="w-6 h-6 ico text-blue-600"><use href="#i-cog"/></svg>
+            </div>
+            <h4 class="mt-3 font-bold text-slate-900 text-sm"><span data-l="es">Configuración</span><span data-l="pt">Configuração</span></h4>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">URL del servidor y API Token, con verificación de superusuario.</span><span data-l="pt">URL do servidor e API Token, com verificação de superusuário.</span></p>
+          </div>
+          <div class="relative p-5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-full bg-indigo-600 text-white font-extrabold flex items-center justify-center">2</span>
+              <svg class="w-6 h-6 ico text-indigo-600"><use href="#i-check"/></svg>
+            </div>
+            <h4 class="mt-3 font-bold text-slate-900 text-sm"><span data-l="es">Validación del CSV</span><span data-l="pt">Validação do CSV</span></h4>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">Se revisa el archivo antes de tocar cualquier dataset.</span><span data-l="pt">O arquivo é revisado antes de alterar qualquer dataset.</span></p>
+          </div>
+          <div class="relative p-5 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-full bg-violet-600 text-white font-extrabold flex items-center justify-center">3</span>
+              <svg class="w-6 h-6 ico text-violet-600"><use href="#i-play"/></svg>
+            </div>
+            <h4 class="mt-3 font-bold text-slate-900 text-sm"><span data-l="es">Procesamiento</span><span data-l="pt">Processamento</span></h4>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">El importador recorre las filas una por una, con un log en vivo y la opción de cancelar.</span><span data-l="pt">O importador percorre as linhas uma a uma, com log em tempo real e opção de cancelar.</span></p>
+          </div>
+          <div class="relative p-5 rounded-2xl bg-emerald-50 border border-emerald-200">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-full bg-emerald-500 text-white font-extrabold flex items-center justify-center">4</span>
+              <svg class="w-6 h-6 ico text-emerald-600"><use href="#i-chart"/></svg>
+            </div>
+            <h4 class="mt-3 font-bold text-slate-900 text-sm"><span data-l="es">Resultados</span><span data-l="pt">Resultados</span></h4>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">Resumen con contadores y descarga de</span><span data-l="pt">Resumo com contadores e download de</span> <span class="inline-code">dataverse-report.csv</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- H. Leyenda de estados -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Leyenda de estados del reporte</span><span data-l="pt">Legenda dos status do relatório</span></h3>
+        </div>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+              <tr>
+                <th class="p-3"><span data-l="es">Estado</span><span data-l="pt">Status</span></th>
+                <th class="p-3"><span data-l="es">Grupo</span><span data-l="pt">Grupo</span></th>
+                <th class="p-3"><span data-l="es">Significado</span><span data-l="pt">Significado</span></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-emerald-100 text-emerald-800">UPDATED</span></td><td class="p-3 text-emerald-700 font-semibold"><span data-l="es">Éxito</span><span data-l="pt">Sucesso</span></td><td class="p-3 text-slate-600"><span data-l="es">dARK agregado y publicado</span><span data-l="pt">dARK adicionado e publicado</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-sky-100 text-sky-800">SKIPPED</span></td><td class="p-3 text-sky-700 font-semibold"><span data-l="es">Omitido</span><span data-l="pt">Ignorado</span></td><td class="p-3 text-slate-600"><span data-l="es">El dARK ya existía</span><span data-l="pt">O dARK já existia</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-amber-100 text-amber-800">NOT FOUND</span></td><td class="p-3 text-amber-700 font-semibold"><span data-l="es">No encontrado</span><span data-l="pt">Não encontrado</span></td><td class="p-3 text-slate-600"><span data-l="es">Ningún dataset con ese PID</span><span data-l="pt">Nenhum dataset com esse PID</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-orange-100 text-orange-800">DRAFT PENDING</span></td><td class="p-3 text-orange-700 font-semibold"><span data-l="es">Requiere revisión</span><span data-l="pt">Requer revisão</span></td><td class="p-3 text-slate-600"><span data-l="es">Hay un borrador abierto</span><span data-l="pt">Há um rascunho aberto</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-orange-100 text-orange-800">LOCKED</span></td><td class="p-3 text-orange-700 font-semibold"><span data-l="es">Requiere revisión</span><span data-l="pt">Requer revisão</span></td><td class="p-3 text-slate-600"><span data-l="es">El dataset tiene bloqueos</span><span data-l="pt">O dataset tem bloqueios</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-rose-100 text-rose-800">ACCESS DENIED</span></td><td class="p-3 text-rose-700 font-semibold"><span data-l="es">Error</span><span data-l="pt">Erro</span></td><td class="p-3 text-slate-600"><span data-l="es">El token no puede acceder o editar</span><span data-l="pt">O token não pode acessar ou editar</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-rose-100 text-rose-800">AUTHENTICATION ERROR</span></td><td class="p-3 text-rose-700 font-semibold"><span data-l="es">Error</span><span data-l="pt">Erro</span></td><td class="p-3 text-slate-600"><span data-l="es">Token inválido o sin permisos de superusuario</span><span data-l="pt">Token inválido ou sem permissões de superusuário</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-rose-100 text-rose-800">VALIDATION ERROR</span></td><td class="p-3 text-rose-700 font-semibold"><span data-l="es">Error</span><span data-l="pt">Erro</span></td><td class="p-3 text-slate-600"><span data-l="es">La versión no es editable</span><span data-l="pt">A versão não é editável</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-rose-100 text-rose-800">PUBLISH ERROR</span></td><td class="p-3 text-rose-700 font-semibold"><span data-l="es">Error</span><span data-l="pt">Erro</span></td><td class="p-3 text-slate-600"><span data-l="es">Se agregó el dARK pero no se pudo publicar</span><span data-l="pt">O dARK foi adicionado, mas não foi possível publicar</span></td></tr>
+              <tr class="hover:bg-slate-50/80"><td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-rose-100 text-rose-800 whitespace-nowrap">API ERROR / NETWORK ERROR</span></td><td class="p-3 text-rose-700 font-semibold"><span data-l="es">Error</span><span data-l="pt">Erro</span></td><td class="p-3 text-slate-600"><span data-l="es">Falla de la API o de la red</span><span data-l="pt">Falha da API ou da rede</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2"><span data-l="es">Contadores de la pantalla de resultados</span><span data-l="pt">Contadores da tela de resultados</span></p>
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center text-[11px] font-bold">
+              <div class="p-2 rounded-xl bg-slate-100 text-slate-700">Total</div>
+              <div class="p-2 rounded-xl bg-emerald-50 text-emerald-700"><span data-l="es">Actualizados</span><span data-l="pt">Atualizados</span></div>
+              <div class="p-2 rounded-xl bg-sky-50 text-sky-700"><span data-l="es">Omitidos</span><span data-l="pt">Ignorados</span></div>
+              <div class="p-2 rounded-xl bg-amber-50 text-amber-700"><span data-l="es">No encontrados</span><span data-l="pt">Não encontrados</span></div>
+              <div class="p-2 rounded-xl bg-orange-50 text-orange-700"><span data-l="es">Requieren revisión</span><span data-l="pt">Requerem revisão</span></div>
+              <div class="p-2 rounded-xl bg-rose-50 text-rose-700"><span data-l="es">Errores</span><span data-l="pt">Erros</span></div>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2"><span data-l="es">Columnas de</span><span data-l="pt">Colunas de</span> <span class="normal-case inline-code">dataverse-report.csv</span></p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="inline-code">dataset_pid</span><span class="inline-code">dataset_id</span><span class="inline-code">dark_id</span><span class="inline-code">status</span><span class="inline-code">message</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="mt-12 py-6 border-t border-slate-200 bg-white text-center text-xs text-slate-500">
+    <p>
+      <span data-l="es">Integración dARK para Dataverse — LA Referencia · Octubre de 2026</span>
+      <span data-l="pt">Integração dARK para Dataverse — LA Referencia · Outubro de 2026</span>
+    </p>
+  </footer>
+
+  <script>
+    const ACTIVE = "bg-sky-500 text-white shadow";
+    const IDLE = "text-slate-300 hover:text-white hover:bg-slate-700/50";
+    const BASE = "px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 ";
+
+    function mark(onId, offId) {
+      document.getElementById(onId).className = BASE + ACTIVE;
+      document.getElementById(offId).className = BASE + IDLE;
+    }
+
+    function setLanguage(lang) {
+      const root = document.documentElement;
+      root.setAttribute('data-lang', lang);
+      root.setAttribute('lang', lang === 'pt' ? 'pt-BR' : 'es');
+      document.title = lang === 'pt' ? 'Infográfico | dARK no Dataverse' : 'Infografía | dARK en Dataverse';
+      lang === 'pt' ? mark('btn-pt', 'btn-es') : mark('btn-es', 'btn-pt');
+      try { localStorage.setItem('dark-info-lang', lang); } catch (e) {}
+    }
+
+    function setView(view) {
+      document.documentElement.setAttribute('data-view', view);
+      view === 'importer' ? mark('btn-importer', 'btn-all') : mark('btn-all', 'btn-importer');
+      try { localStorage.setItem('dark-info-view', view); } catch (e) {}
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    (function init() {
+      let lang = 'es', view = 'all';
+      try {
+        lang = localStorage.getItem('dark-info-lang') || 'es';
+        view = localStorage.getItem('dark-info-view') || 'all';
+      } catch (e) {}
+      setLanguage(lang);
+      document.documentElement.setAttribute('data-view', view);
+      view === 'importer' ? mark('btn-importer', 'btn-all') : mark('btn-all', 'btn-importer');
+    })();
+  </script>
+</body>
+</html>
