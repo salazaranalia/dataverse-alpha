@@ -1,0 +1,459 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Instalación de Dataverse</title>
+<meta name="description" content="Guía de instalación de Dataverse con Docker Compose (dataverse-alpha), en español y portugués.">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: light; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #f1f5f9; color: #1e293b; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .gradient-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%); }
+  html[data-lang="es"] [data-l="pt"], html[data-lang="pt"] [data-l="es"] { display: none !important; }
+  .ico { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .inline-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .78em; background: #f1f5f9; color: #334155; padding: .1em .4em; border-radius: .35em; border: 1px solid #e2e8f0; white-space: nowrap; }
+  .dark-code { background: rgba(255,255,255,.08); color: #bae6fd; border-color: rgba(255,255,255,.15); }
+  .codeblock { background: #0f172a; color: #e2e8f0; border-radius: .75rem; padding: 1rem; font-size: .8rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
+  .codeblock .c { color: #7dd3fc; }
+  .codeblock .k { color: #86efac; }
+  .tbl-wrap { overflow-x: auto; }
+  .diamond-line { background: #e2e8f0; }
+  @media print { header .no-print { display: none !important; } header { position: static !important; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+<div class="antialiased min-h-screen">
+
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l5 5v11a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/></symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1011.4 0"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 011-1h8l9 9-9 9-9-9z"/><path d="M7.5 7.5h.01"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/></symbol>
+    <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+  </svg>
+
+  <!-- Encabezado -->
+  <header class="gradient-header text-white sticky top-0 z-50 shadow-lg border-b border-slate-700/50" style="top: env(safe-area-inset-top, 0px)">
+    <div class="gutter max-w-7xl mx-auto py-4 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3 min-w-0">
+        <div class="p-2.5 bg-blue-500/20 rounded-xl border border-blue-400/30 text-blue-300 shrink-0">
+          <svg class="w-7 h-7 ico"><use href="#i-server"/></svg>
+        </div>
+        <div class="min-w-0">
+          <span class="text-xs font-semibold tracking-wider uppercase text-sky-400 block">
+            <span data-l="es">Instalación inicial · dataverse-alpha</span><span data-l="pt">Instalação inicial · dataverse-alpha</span>
+          </span>
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight">
+            <span data-l="es">Dataverse con Docker Compose</span><span data-l="pt">Dataverse com Docker Compose</span>
+          </h1>
+        </div>
+      </div>
+      <div class="no-print flex flex-wrap items-center gap-3">
+        <div class="inline-flex bg-slate-800/80 p-1.5 rounded-xl border border-slate-700 shadow-inner">
+          <button id="btn-es" onclick="setLanguage('es')" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200">🇪🇸 Español</button>
+          <button id="btn-pt" onclick="setLanguage('pt')" class="px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200">🇧🇷 Português</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="gutter max-w-7xl mx-auto py-8 space-y-8">
+
+    <!-- Banner -->
+    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+      <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 max-w-4xl space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/20 border border-sky-400/30 rounded-full text-xs font-semibold text-sky-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>dataverse-alpha · Docker Compose</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <span data-l="es">Instalación inicial de Dataverse con PostgreSQL, Solr y SMTP, en un entorno Alpha.</span>
+          <span data-l="pt">Instalação inicial do Dataverse com PostgreSQL, Solr e SMTP, em um ambiente Alpha.</span>
+        </h2>
+      </div>
+    </div>
+
+    <!-- 01 Alcance -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">01</span>
+        <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Qué vas a obtener</span><span data-l="pt">O que você vai obter</span></h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/70">
+          <span class="inline-flex p-2 bg-blue-50 text-blue-600 rounded-xl mb-3"><svg class="w-5 h-5 ico"><use href="#i-layers"/></svg></span>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <span data-l="es"><strong class="text-slate-900">Una instancia de Dataverse</strong> corriendo en Docker Compose, con PostgreSQL, Solr y SMTP como servicios de apoyo.</span>
+            <span data-l="pt"><strong class="text-slate-900">Uma instância do Dataverse</strong> rodando em Docker Compose, com PostgreSQL, Solr e SMTP como serviços de apoio.</span>
+          </p>
+        </div>
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/70">
+          <span class="inline-flex p-2 bg-indigo-50 text-indigo-600 rounded-xl mb-3"><svg class="w-5 h-5 ico"><use href="#i-doc"/></svg></span>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <span data-l="es"><strong class="text-slate-900">Previewers de archivos</strong> habilitados y funcionando.</span>
+            <span data-l="pt"><strong class="text-slate-900">Previewers de arquivos</strong> habilitados e funcionando.</span>
+          </p>
+        </div>
+        <div class="p-5 rounded-xl bg-slate-50 border border-slate-200/70">
+          <span class="inline-flex p-2 bg-emerald-50 text-emerald-600 rounded-xl mb-3"><svg class="w-5 h-5 ico"><use href="#i-tag"/></svg></span>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <span data-l="es"><strong class="text-slate-900">Branding e idiomas</strong> configurados (opcional).</span>
+            <span data-l="pt"><strong class="text-slate-900">Branding e idiomas</strong> configurados (opcional).</span>
+          </p>
+        </div>
+      </div>
+      <!--<div class="mt-5 p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex gap-2 items-start">
+        <svg class="w-4 h-4 ico shrink-0 mt-0.5"><use href="#i-info"/></svg>
+        <span data-l="es">Es una instalación <strong>alpha</strong>, pensada para las primeras pruebas. No es para producción, ni fue probada con otra distribución, otra versión de Ubuntu ni otro proxy que no sea nginx.</span>
+        <span data-l="pt">É uma instalação <strong>alpha</strong>, pensada para os primeiros testes. Não é para produção, nem foi testada com outra distribuição, outra versão do Ubuntu ou outro proxy além do nginx.</span>
+      </div>
+    </div>-->
+
+    <!-- 02 Requisitos -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">02</span>
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Requisitos y recursos</span><span data-l="pt">Requisitos e recursos</span></h3>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+            <p class="text-[11px] font-bold uppercase text-slate-400">Docker Engine</p>
+            <p class="mt-1 text-sm font-extrabold text-slate-900">29.5.2</p>
+            <p class="text-slate-500 mt-0.5"><span data-l="es">versión probada</span><span data-l="pt">versão testada</span></p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+            <p class="text-[11px] font-bold uppercase text-slate-400">Docker Compose</p>
+            <p class="mt-1 text-sm font-extrabold text-slate-900">v5.1.4</p>
+            <p class="text-slate-500 mt-0.5"><span data-l="es">versión probada</span><span data-l="pt">versão testada</span></p>
+          </div>
+          <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-100">
+            <p class="text-[11px] font-bold uppercase text-blue-500">RAM</p>
+            <p class="mt-1 text-sm font-extrabold text-blue-900">4 GB</p>
+            <p class="text-slate-600 mt-0.5"><span data-l="es">mínimo del contenedor Dataverse</span><span data-l="pt">mínimo do contêiner Dataverse</span></p>
+          </div>
+          <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-100">
+            <p class="text-[11px] font-bold uppercase text-indigo-500">RAM</p>
+            <p class="mt-1 text-sm font-extrabold text-indigo-900">16 GB</p>
+            <p class="text-slate-600 mt-0.5"><span data-l="es">total del entorno completo</span><span data-l="pt">total do ambiente completo</span></p>
+          </div>
+          <div class="p-4 rounded-xl bg-violet-50/70 border border-violet-100">
+            <p class="text-[11px] font-bold uppercase text-violet-500">CPU</p>
+            <p class="mt-1 text-sm font-extrabold text-violet-900">4 vCPU</p>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-100">
+            <p class="text-[11px] font-bold uppercase text-emerald-600"><span data-l="es">Disco</span><span data-l="pt">Disco</span></p>
+            <p class="mt-1 text-sm font-extrabold text-emerald-900">30 GB</p>
+          </div>
+        </div>
+        <div class="mt-4 p-3 bg-sky-50 rounded-xl border border-sky-100 text-xs text-sky-800 flex gap-2 items-start">
+          <svg class="w-4 h-4 ico shrink-0 mt-0.5"><use href="#i-info"/></svg>
+          <span data-l="es">Valores de prueba a pequeña escala. Si habrá más usuarios, archivos o repositorios, hay que dimensionar de nuevo.</span>
+          <span data-l="pt">Valores de teste em pequena escala. Se houver mais usuários, arquivos ou repositórios, será preciso dimensionar novamente.</span>
+        </div>
+      </div>
+
+      <!-- Red y SO -->
+      <div class="lg:col-span-5">
+        <div class="h-full bg-gradient-to-br from-blue-900 to-indigo-900 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300"><span data-l="es">Entorno probado</span><span data-l="pt">Ambiente testado</span></span>
+          <div class="mt-4 space-y-3 text-sm">
+            <div class="p-3 rounded-xl bg-white/10 border border-white/10"><span class="inline-code dark-code">Ubuntu 26</span> · ARM64</div>
+            <div class="p-3 rounded-xl bg-white/10 border border-white/10">
+              <span data-l="es">nginx delante, <strong class="text-white">terminando SSL</strong>.</span>
+              <span data-l="pt">nginx na frente, <strong class="text-white">encerrando SSL</strong>.</span>
+            </div>
+            <div class="p-3 rounded-xl bg-white/10 border border-white/10">
+              <span data-l="es">La VM expone el puerto <span class="inline-code dark-code">8080</span>.</span>
+              <span data-l="pt">A VM expõe a porta <span class="inline-code dark-code">8080</span>.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Estructura -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">03</span>
+        <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Estructura del proyecto</span><span data-l="pt">Estrutura do projeto</span></h3>
+      </div>
+      <div class="codeblock"><span class="k">dataverse-alpha/</span>
+├── compose.yml
+├── .env                    <span class="c"># se genera desde .env.example</span>
+├── .env.example            <span class="c"># plantilla de variables</span>
+├── demo/
+│   └── init.sh             <span class="c"># bootstrap personalizado</span>
+├── dataverse-config/
+│   ├── activate-config.sh  <span class="c"># branding e idiomas</span>
+│   ├── branding/           <span class="c"># header, footer, homepage, CSS</span>
+│   ├── languages/locale.sh <span class="c"># fuerza es y pt por defecto</span>
+│   └── metadata-blocks/    <span class="c"># citation.tsv, sdg.tsv</span>
+└── data/                   <span class="c"># datos persistentes</span>
+    ├── app/dv/  ·  app/secrets/
+    ├── postgresql/
+    └── solr/</div>
+    </div>
+
+    <!-- 04 Pasos -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">04</span>
+        <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Instalación paso a paso</span><span data-l="pt">Instalação passo a passo</span></h3>
+      </div>
+
+      <ol class="relative space-y-5">
+        <div class="absolute left-[19px] top-4 bottom-4 w-0.5 bg-slate-200" aria-hidden="true"></div>
+
+        <li class="relative flex gap-4 items-start">
+          <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-blue-600 text-white font-extrabold flex items-center justify-center shadow">0</span>
+          <div class="pt-1 flex-1 min-w-0 text-sm text-slate-700">
+            <p class="font-bold text-slate-900"><span data-l="es">Crear el archivo .env</span><span data-l="pt">Criar o arquivo .env</span></p>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">Se genera desde la plantilla. Revisar las credenciales placeholder antes de exponer la instancia.</span><span data-l="pt">Gere a partir do modelo. Revise as credenciais placeholder antes de expor a instância.</span></p>
+            <pre class="codeblock mt-2">cp .env.example .env
+cat .env</pre>
+          </div>
+        </li>
+
+        <li class="relative flex gap-4 items-start">
+          <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-indigo-600 text-white font-extrabold flex items-center justify-center shadow ring-4 ring-indigo-100">1</span>
+          <div class="pt-1 flex-1 min-w-0 text-sm text-slate-700">
+            <p class="font-bold text-slate-900"><span data-l="es">Crear los directorios de datos</span><span data-l="pt">Criar os diretórios de dados</span></p>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">Los contenedores persisten sus datos fuera de sí mismos.</span><span data-l="pt">Os contêineres persistem seus dados fora de si mesmos.</span></p>
+            <pre class="codeblock mt-2">mkdir -p data/app/dv data/app/secrets data/postgresql/data data/solr/data data/solr/conf
+ls -la data/app data/postgresql data/solr</pre>
+          </div>
+        </li>
+
+        <li class="relative flex gap-4 items-start">
+          <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-violet-600 text-white font-extrabold flex items-center justify-center shadow">2</span>
+          <div class="pt-1 flex-1 min-w-0 text-sm text-slate-700">
+            <p class="font-bold text-slate-900"><span data-l="es">Levantar la infraestructura base</span><span data-l="pt">Subir a infraestrutura base</span></p>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">PostgreSQL, Solr, SMTP y Dataverse.</span><span data-l="pt">PostgreSQL, Solr, SMTP e Dataverse.</span></p>
+            <pre class="codeblock mt-2">docker compose up -d postgres solr dataverse
+docker compose ps</pre>
+          </div>
+        </li>
+
+        <li class="relative flex gap-4 items-start">
+          <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center shadow">3</span>
+          <div class="pt-1 flex-1 min-w-0 text-sm text-slate-700">
+            <p class="font-bold text-slate-900"><span data-l="es">Ejecutar el bootstrap</span><span data-l="pt">Executar o bootstrap</span></p>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">Crea el usuario <span class="inline-code">dataverseadmin</span> y los datos base. La contraseña por defecto es <span class="inline-code">admin1</span>; cámbiala antes de exponer la instancia.</span><span data-l="pt">Cria o usuário <span class="inline-code">dataverseadmin</span> e os dados base. A senha padrão é <span class="inline-code">admin1</span>; troque-a antes de expor a instância.</span></p>
+            <pre class="codeblock mt-2">docker compose up bootstrap</pre>
+          </div>
+        </li>
+
+        <li class="relative flex gap-4 items-start">
+          <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-emerald-500 text-white font-extrabold flex items-center justify-center shadow">4</span>
+          <div class="pt-1 flex-1 min-w-0 text-sm text-slate-700">
+            <p class="font-bold text-slate-900"><span data-l="es">Levantar los previewers</span><span data-l="pt">Subir os previewers</span></p>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">Habilita la previsualización de archivos. La imagen oficial solo existe para amd64; en ARM64 se usan las imágenes adaptadas.</span><span data-l="pt">Habilita a pré-visualização de arquivos. A imagem oficial existe só para amd64; em ARM64 usam-se as imagens adaptadas.</span></p>
+            <pre class="codeblock mt-2">docker compose build previewers-provider register-previewers
+docker compose up -d previewers-provider
+docker compose up register-previewers</pre>
+          </div>
+        </li>
+
+        <li class="relative flex gap-4 items-start">
+          <span class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-slate-700 text-white font-extrabold flex items-center justify-center shadow"><svg class="w-5 h-5 ico"><use href="#i-refresh"/></svg></span>
+          <div class="pt-1 flex-1 min-w-0 text-sm text-slate-700">
+            <p class="font-bold text-slate-900"><span data-l="es">Arranques posteriores</span><span data-l="pt">Inícios posteriores</span></p>
+            <p class="mt-1 text-xs text-slate-600"><span data-l="es">El proyecto ya está inicializado; los datos de la primera instalación se conservan.</span><span data-l="pt">O projeto já está inicializado; os dados da primeira instalação são mantidos.</span></p>
+            <pre class="codeblock mt-2">docker compose up -d</pre>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- 05 Opcional + 06 Verificación -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">05</span>
+          <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Configuración opcional: branding e idiomas</span><span data-l="pt">Configuração opcional: branding e idiomas</span></h3>
+        </div>
+
+        <div class="space-y-5">
+          <div>
+            <p class="text-sm font-bold text-slate-900 mb-2"><span data-l="es">Método automático: activate-config.sh</span><span data-l="pt">Método automático: activate-config.sh</span></p>
+            <p class="text-xs text-slate-600 mb-2"><span data-l="es">Aplica a una instancia de Dataverse en ejecución el <span class="inline-code">branding/</span>, los <span class="inline-code">metadata-blocks/</span> y el <span class="inline-code">languages/languages.zip</span> de LA Referencia.</span><span data-l="pt">Aplica a uma instância do Dataverse em execução o <span class="inline-code">branding/</span>, os <span class="inline-code">metadata-blocks/</span> e o <span class="inline-code">languages/languages.zip</span> da LA Referencia.</span></p>
+            <pre class="codeblock">bash dataverse-config/activate-config.sh</pre>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <p class="font-bold text-slate-900 mb-2"><span data-l="es">Requisitos</span><span data-l="pt">Requisitos</span></p>
+                <ul class="space-y-1.5 text-slate-600">
+                  <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es">Dataverse, PostgreSQL y Solr en ejecución.</span><span data-l="pt">Dataverse, PostgreSQL e Solr em execução.</span></li>
+                  <li class="flex gap-2"><span class="text-emerald-500">●</span><span data-l="es"><span class="inline-code">BLOCKED_API_KEY</span> en el .env igual al <span class="inline-code">:BlockedApiKey</span> configurado en la instancia.</span><span data-l="pt"><span class="inline-code">BLOCKED_API_KEY</span> no .env igual ao <span class="inline-code">:BlockedApiKey</span> configurado na instância.</span></li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <p class="font-bold text-slate-900 mb-2"><span data-l="es">Branding: archivos válidos</span><span data-l="pt">Branding: arquivos válidos</span></p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="inline-code">custom-homepage.html</span><span class="inline-code">custom-header.html</span><span class="inline-code">custom-footer.html</span><span class="inline-code">custom-stylesheet.css</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 p-4 rounded-xl bg-sky-50 border border-sky-100 text-xs text-sky-900">
+              <p class="font-bold mb-1">Metadata blocks</p>
+              <p><span data-l="es">Después de cargar al menos un <span class="inline-code">.tsv</span>, el script ofrece actualizar Solr. Es necesario para que los campos nuevos se indexen y se puedan buscar. Si se omite la actualización, el bloque queda cargado en la base pero no se puede usar en búsquedas.</span><span data-l="pt">Depois de carregar pelo menos um <span class="inline-code">.tsv</span>, o script oferece atualizar o Solr. Isso é necessário para que os novos campos sejam indexados e possam ser pesquisados. Se a atualização for ignorada, o bloco fica carregado no banco, mas não pode ser usado em buscas.</span></p>
+            </div>
+
+            <div class="mt-3 p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              <p class="font-bold mb-1"><span data-l="es">Idiomas: languages.zip</span><span data-l="pt">Idiomas: languages.zip</span></p>
+              <p><span data-l="es">El script no genera <span class="inline-code">languages/languages.zip</span>: solo lo sube si ya existe. Para crearlo, usa los archivos <span class="inline-code">.properties</span> del repo <a href="https://github.com/LA-Referencia-IOI/dataverse-language-packs" target="_blank" rel="noopener" class="underline font-semibold">dataverse-language-packs de LA Referencia</a>, en la raíz del zip (sin subcarpetas). Los archivos deben llamarse con los códigos <span class="inline-code">en</span>, <span class="inline-code">es</span> y <span class="inline-code">pt</span>.</span><span data-l="pt">O script não gera <span class="inline-code">languages/languages.zip</span>: ele só o envia se o arquivo já existir. Para criá-lo, use os arquivos <span class="inline-code">.properties</span> do repositório <a href="https://github.com/LA-Referencia-IOI/dataverse-language-packs" target="_blank" rel="noopener" class="underline font-semibold">dataverse-language-packs da LA Referencia</a>, na raiz do zip (sem subpastas). Os arquivos devem se chamar com os códigos <span class="inline-code">en</span>, <span class="inline-code">es</span> e <span class="inline-code">pt</span>.</span></p>
+              <p class="mt-2 font-bold"><span data-l="es">Reiniciar el contenedor <span class="inline-code">dataverse</span> después de subir el zip es obligatorio.</span><span data-l="pt">Reiniciar o contêiner <span class="inline-code">dataverse</span> depois de enviar o zip é obrigatório.</span></p>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold text-slate-900 mb-2"><span data-l="es">Método manual</span><span data-l="pt">Método manual</span></p>
+            <p class="text-xs text-slate-600 mb-2"><span data-l="es">Útil para aplicar solo algunos ajustes o depurar fallos. Se ejecuta dentro del contenedor:</span><span data-l="pt">Útil para aplicar só alguns ajustes ou depurar falhas. Execute dentro do contêiner:</span></p>
+            <pre class="codeblock">docker exec -it dataverse bash
+UNBLOCK_KEY=&lt;tu_BLOCKED_API_KEY&gt;
+BASE_URL=http://localhost:8080
+curl -H "X-Dataverse-unblock-key:$UNBLOCK_KEY" -X PUT \
+  -d '/var/www/dataverse/branding/custom-header.html' \
+  "$BASE_URL/api/admin/settings/:HeaderCustomizationFile"
+<span class="c"># Igual para :FooterCustomizationFile, :StyleCustomizationFile y :HomePageCustomizationFile</span>
+curl -H "X-Dataverse-unblock-key:$UNBLOCK_KEY" -X PUT \
+  -d '[{"locale":"en","title":"English"},{"locale":"es","title":"Spanish"},{"locale":"pt","title":"Portuguese"}]' \
+  "$BASE_URL/api/admin/settings/:Languages"</pre>
+            <p class="mt-2 text-xs text-slate-600"><span data-l="es">El <span class="inline-code">UNBLOCK_KEY</span> es el valor de <span class="inline-code">BLOCKED_API_KEY</span> en el .env.</span><span data-l="pt">O <span class="inline-code">UNBLOCK_KEY</span> é o valor de <span class="inline-code">BLOCKED_API_KEY</span> no .env.</span></p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex gap-2 items-start">
+            <svg class="w-4 h-4 ico shrink-0 mt-0.5"><use href="#i-info"/></svg>
+            <span data-l="es"><strong>El idioma queda solo en español.</strong> Aunque se configure <span class="inline-code">:Languages</span>, el idioma por defecto sigue siendo el español. El script <span class="inline-code">locale.sh</span> lo corrige antes de que arranque la interfaz.</span>
+            <span data-l="pt"><strong>O idioma fica só em espanhol.</strong> Mesmo com <span class="inline-code">:Languages</span> configurado, o idioma padrão continua sendo o espanhol. O script <span class="inline-code">locale.sh</span> corrige isso antes de a interface subir.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">06</span>
+          <h3 class="text-lg font-bold text-slate-900"><span data-l="es">Verificación final</span><span data-l="pt">Verificação final</span></h3>
+        </div>
+        <ul class="space-y-3 text-sm text-slate-700">
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es"><span class="inline-code">docker compose ps</span> muestra postgres, solr, smtp y dataverse corriendo.</span><span data-l="pt"><span class="inline-code">docker compose ps</span> mostra postgres, solr, smtp e dataverse em execução.</span></li>
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es">Se abre <span class="inline-code">http://localhost:8080</span> (o el dominio según <span class="inline-code">MACHINE_IP</span>).</span><span data-l="pt">Abre <span class="inline-code">http://localhost:8080</span> (ou o domínio, conforme <span class="inline-code">MACHINE_IP</span>).</span></li>
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es">Inicio de sesión con <span class="inline-code">dataverseadmin</span>.</span><span data-l="pt">Login com <span class="inline-code">dataverseadmin</span>.</span></li>
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es">Previewers en <span class="inline-code">http://localhost:9000</span> (o <span class="inline-code">PREVIEWERS_ORIGIN</span>).</span><span data-l="pt">Previewers em <span class="inline-code">http://localhost:9000</span> (ou <span class="inline-code">PREVIEWERS_ORIGIN</span>).</span></li>
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es">Al subir un archivo de prueba, se genera una previsualización.</span><span data-l="pt">Ao enviar um arquivo de teste, é gerada uma pré-visualização.</span></li>
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es">La interfaz respeta el idioma del navegador: español, portugués o inglés.</span><span data-l="pt">A interface respeita o idioma do navegador: espanhol, português ou inglês.</span></li>
+          <li class="flex gap-3 items-start"><svg class="w-5 h-5 ico text-emerald-600 shrink-0 mt-0.5"><use href="#i-check"/></svg><span data-l="es">Si hay branding, se ven header, footer, homepage y estilos propios.</span><span data-l="pt">Se houver branding, aparecem header, footer, homepage e estilos próprios.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 07 Problemas -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg">07</span>
+        <h3 class="text-xl font-bold text-slate-900"><span data-l="es">Problemas frecuentes</span><span data-l="pt">Problemas frequentes</span></h3>
+      </div>
+      <div class="tbl-wrap rounded-xl border border-slate-200">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3"><span data-l="es">Error</span><span data-l="pt">Erro</span></th>
+              <th class="p-3"><span data-l="es">Causa</span><span data-l="pt">Causa</span></th>
+              <th class="p-3"><span data-l="es">Solución</span><span data-l="pt">Solução</span></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 align-top">
+            <tr>
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-rose-100 text-rose-800">build o arranque de previewers</span></td>
+              <td class="p-3 text-slate-600"><span data-l="es">En ARM64. La imagen oficial solo está publicada para amd64.</span><span data-l="pt">Em ARM64. A imagem oficial só é publicada para amd64.</span></td>
+              <td class="p-3 text-slate-600"><span data-l="es">Usar las imágenes adaptadas a ARM64 o construir una propia a partir de ellas.</span><span data-l="pt">Usar as imagens adaptadas para ARM64 ou construir uma própria a partir delas.</span></td>
+            </tr>
+            <tr>
+              <td class="p-3"><span class="px-2 py-0.5 rounded-md font-bold bg-orange-100 text-orange-800"><span data-l="es">interfaz solo en español</span><span data-l="pt">interface só em espanhol</span></span></td>
+              <td class="p-3 text-slate-600"><span data-l="es">El selector de idioma aparece, pero el idioma por defecto no coincide con lo configurado. Los locales <span class="inline-code">fr</span> y <span class="inline-code">zh_CN</span> vienen declarados en <span class="inline-code">faces-config.xml</span>.</span><span data-l="pt">O seletor de idioma aparece, mas o idioma padrão não corresponde ao configurado. Os locales <span class="inline-code">fr</span> e <span class="inline-code">zh_CN</span> vêm declarados em <span class="inline-code">faces-config.xml</span>.</span></td>
+              <td class="p-3 text-slate-600"><span data-l="es">Ejecutar el script <span class="inline-code">locale.sh</span> antes de que arranque la app (fr→es y zh_CN→pt).</span><span data-l="pt">Executar o script <span class="inline-code">locale.sh</span> antes de a aplicação subir (fr→es e zh_CN→pt).</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-xs text-slate-500"><span data-l="es">El script de idiomas depende de la versión de Dataverse y config-baker; puede cambiar después de la 6.12.</span><span data-l="pt">O script de idiomas depende da versão do Dataverse e do config-baker; pode mudar após a 6.12.</span></p>
+    </div>
+
+    <!-- 08 Comandos -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-5 bg-gradient-to-br from-blue-900 to-indigo-900 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300"><span data-l="es">Referencia</span><span data-l="pt">Referência</span></span>
+        <h3 class="mt-1 text-lg font-extrabold"><span data-l="es">Comandos frecuentes</span><span data-l="pt">Comandos frequentes</span></h3>
+        <div class="mt-4 space-y-3 text-sm">
+          <div class="p-3 rounded-xl bg-white/10 border border-white/10"><span class="inline-code dark-code">docker compose ps</span><p class="mt-1 text-xs text-slate-300"><span data-l="es">Estado de todos los servicios.</span><span data-l="pt">Estado de todos os serviços.</span></p></div>
+          <div class="p-3 rounded-xl bg-white/10 border border-white/10"><span class="inline-code dark-code">docker compose logs -f dataverse</span><p class="mt-1 text-xs text-slate-300"><span data-l="es">Seguir los logs de un servicio.</span><span data-l="pt">Acompanhar os logs de um serviço.</span></p></div>
+          <div class="p-3 rounded-xl bg-white/10 border border-white/10"><span class="inline-code dark-code">docker compose restart dataverse</span><p class="mt-1 text-xs text-slate-300"><span data-l="es">Reiniciar un servicio.</span><span data-l="pt">Reiniciar um serviço.</span></p></div>
+        </div>
+      </div>
+      <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-center">
+        <div class="flex items-center gap-3">
+          <span class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl"><svg class="w-6 h-6 ico"><use href="#i-terminal"/></svg></span>
+          <p class="text-sm text-slate-700">
+            <span data-l="es">Los pasos 2 a 4 y los arranques posteriores se pueden repetir sin perder datos. Ante cualquier fallo, revisar primero <span class="inline-code">docker compose logs -f</span> del servicio afectado.</span>
+            <span data-l="pt">Os passos 2 a 4 e os inícios posteriores podem ser repetidos sem perder dados. Diante de qualquer falha, verifique antes o <span class="inline-code">docker compose logs -f</span> do serviço afetado.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="gutter mt-12 py-6 border-t border-slate-200 bg-white text-center text-xs text-slate-500">
+    <p>
+      <span data-l="es">Instalación de Dataverse con Docker Compose · dataverse-alpha</span>
+      <span data-l="pt">Instalação do Dataverse com Docker Compose · dataverse-alpha</span>
+    </p>
+  </footer>
+
+  <script>
+    const ACTIVE = "bg-sky-500 text-white shadow";
+    const IDLE = "text-slate-300 hover:text-white hover:bg-slate-700/50";
+    const BASE = "px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 ";
+
+    function mark(onId, offId) {
+      document.getElementById(onId).className = BASE + ACTIVE;
+      document.getElementById(offId).className = BASE + IDLE;
+    }
+
+    function setLanguage(lang) {
+      const root = document.documentElement;
+      root.setAttribute('data-lang', lang);
+      root.setAttribute('lang', lang === 'pt' ? 'pt-BR' : 'es');
+      document.title = lang === 'pt' ? 'Instalação do Dataverse' : 'Instalación de Dataverse';
+      lang === 'pt' ? mark('btn-pt', 'btn-es') : mark('btn-es', 'btn-pt');
+      try { localStorage.setItem('dataverse-install-lang', lang); } catch (e) {}
+    }
+
+    (function init() {
+      let lang = 'es';
+      try { lang = localStorage.getItem('dataverse-install-lang') || 'es'; } catch (e) {}
+      setLanguage(lang);
+    })();
+  </script>
+</div>
+
+</body></html>
